@@ -5,16 +5,15 @@ var qs = require('querystring');
 http.createServer(function (req, res) {
     if (req.url === "/" || req.url === "/index.html") {
         res.writeHead(200, { 'Content-Type': 'text/html' });
-
         fs.createReadStream(__dirname + "/index.html").pipe(res);
-    } else if (req.url === "/api/convert-number") {
+    } else if (req.url === "/api/v1/convert-number") {
         let result = {};
-        let mData = '';
+        let reqBody = '';
 
         req.on('data', function (data) {
-            mData += data;
+            reqBody += data;
         }).on('end', function () {
-            let params = qs.parse(mData);
+            let params = qs.parse(reqBody);
             let inputValue = params.inputValue;
             if (isRomanNumber(inputValue)) {
                 let tmpRes = convertRomanToArabicNumber(inputValue) + "";
@@ -39,9 +38,9 @@ const convertRomanToArabicNumber = (input) => {
         .toUpperCase()
         .split('')
         .reduce(
-            (acc, romanLetter) => {
+            (acc, char) => {
                 let negativeOffset = 0;
-                const arabicValue = mMaps[romanLetter];
+                const arabicValue = RomanLetterToDecimal[char];
                 if (acc[1] < arabicValue) {
                     negativeOffset = -(acc[1] * 2);
                 }
@@ -58,15 +57,10 @@ const isRomanNumber = (string) => {
     if (string == null) {
         return false;
     }
-    console.log("TEST string: ", regex.test(string));
-    if (regex.test(string) == true) {
-        return true;
-    } else {
-        return false;
-    }
+    return  regex.test(string);
 }
 
-const mMaps = {
+const RomanLetterToDecimal = {
     I: 1,
     V: 5,
     X: 10,
