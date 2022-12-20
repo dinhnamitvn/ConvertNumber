@@ -15,10 +15,10 @@
         <!-- <form class="form-horizontal" action="/action_page.php"> -->
         <div class="form-horizontal">
             <div class="form-group">
-                <label class="control-label col-sm-2" for="email">Roman numeral:</label>
+                <label class="control-label col-sm-2" for="roman_val">Roman numeral:</label>
                 <div class="col-sm-3">
                     <input type="text" class="form-control" id="roman_val" placeholder="Enter Roman numeral"
-                        name="emroman_valail">
+                        name="roman_val">
                     <label for="error" id="invalidLabel" class="control-label" style="color: red; display: none;">Please
                         input valid roman number</label>
                 </div>
@@ -27,9 +27,9 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-sm-2" for="pwd">Arabic number:</label>
+                <label class="control-label col-sm-2" for="arabic_val">Arabic number:</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" id="arabic_val" placeholder="Enter Arabic number"
+                    <input type="text" class="form-control" id="arabic_val" readonly
                         name="arabic_val">
                 </div>
             </div>
@@ -40,15 +40,12 @@
         const convertNumber = () => {
             $('#invalidLabel').hide();
             const roman_val = $("#roman_val").val().trim();
-            console.log("on click convert btn - value:", roman_val);
-
-
+            
             $.ajax({
-                url: "http://localhost:3000/api/convert-number",
+                url: "http://localhost:3000/api/v1/convert-number",
                 method: "POST",
                 data: { inputValue: roman_val },
                 success: function (data, status, xhr) {
-                    console.log("success find plate: ", data);
                     if (data.status) {
                         $('#arabic_val').val(data.res);
                     } else {
@@ -57,7 +54,7 @@
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-                    console.log("errors find plate no: ", errorMessage);
+                    console.log("errors convert number: ", errorMessage);
                 }
             })
         }
